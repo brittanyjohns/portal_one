@@ -1,0 +1,70 @@
+.post {
+  border: 1em black solid;
+  padding: 10px;
+}
+.post-body {
+  text-decoration: none;
+  color: black;
+  padding: 10px;
+  padding-right: 20px;
+}
+
+.icon-link {
+  padding: 5px;
+  text-decoration: none;
+  color: black;
+  /* background-color: teal;
+    color: white; */
+}
+
+.small {
+  font: 12px sans-serif;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+.post a {
+  color: black;
+  text-decoration: none;
+}
+.post a:hover {
+  color: teal;
+}
+.text-right {
+  text-align: right;
+}
+.p1 {
+  font-family: "Times New Roman", Times, serif;
+}
+
+.p2 {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.p3 {
+  font-family: "Lucida Console", "Courier New", monospace;
+}
+
+.strain {
+  width: 18rem;
+  height: 30rem;
+  margin-bottom: 5rem;
+  padding: 10px;
+}
+
+.page {
+  padding-top: 15px;
+}
+
+.half {
+  width: 50%;
+}
+.inline {
+  display: inline-block;
+  max-width: 325px;
+}
+
+#resume-textbox {
+  height: 250px;
+  width: 75%;
+}
