@@ -13,6 +13,7 @@ class PostsController < ApplicationController
   # GET /posts/new
   def new
     @post = Post.new
+    @doc = @post.docs.new
   end
 
   # GET /posts/1/edit
@@ -21,6 +22,7 @@ class PostsController < ApplicationController
 
   # POST /posts or /posts.json
   def create
+    puts "\n\nparams: #{params.inspect}\n\n"
     @post = Post.new(post_params)
 
     respond_to do |format|
@@ -66,6 +68,6 @@ class PostsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def post_params
-    params.require(:post).permit(:name, :body, :send_request_on_save, :response_type)
+    params.require(:post).permit(:name, :body, :send_request_on_save, :response_type, docs_attributes: [:_destroy, :id, :name, :doc_type, :main_image])
   end
 end

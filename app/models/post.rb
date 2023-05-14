@@ -1,16 +1,23 @@
 class Post < ApplicationRecord
   has_many :docs, as: :documentable
   has_rich_text :content
-  before_save :send_to_ai, if: :send_request_on_save?
+  before_save :send_to_ai, if: :send_request_on_save
+  accepts_nested_attributes_for :docs, allow_destroy: true
+
+  scope :images, -> {  where(response_type: 0) }
+  scope :text, -> { where(response_type: 1) }
 
   enum response_type: { image: 0, text: 1 }
+  DEFAULT_MODEL = "text-davinci-001"
 
   def self.response_type_select
     response_types.keys.map { |k| [k.titleize, k] }
   end
 
   def send_to_ai
-    create_image if response_type == 0
+    puts "Sending response_type: #{response_type}"
+    create_image if response_type == "image"
+    create_completion if response_type == "text"
   end
 
   def self.openai_client
@@ -21,12 +28,8 @@ class Post < ApplicationRecord
     @openai_client ||= OpenAI::Client.new(access_token: ENV.fetch("OPENAI_ACCESS_TOKEN"))
   end
 
-  def self.create_image(prompt, post_id = nil)
-    post = Post.find(post_id)
-    post.name = prompt
-    unless post
-      post = Post.find_or_initialize_by(name: prompt)
-    end
+  def self.create_image(prompt)
+    post = Post.create(name: prompt)
     begin
       response = openai_client.images.generate(parameters: { prompt: prompt, size: "1024x1024" })
       img_url = response.dig("data", 0, "url")
@@ -52,5 +55,23 @@ class Post < ApplicationRecord
       puts "**** ERROR **** \nDid not receive valid response.\n"
     end
     self.send_request_on_save = false
+  end
+
+  def create_completion
+    response = openai_client.completions(parameters: { model: DEFAULT_MODEL, prompt: name })
+    if response
+      choices = response["choices"].map { |c| "<p class='ai-response'>#{c["text"]}</p>" }.join("\n")
+      puts "CHOICES: #{choices}"
+      self.body = response
+      self.content.body = "<p class='ai-response'>#{choices[0]}</p>"
+    else
+      puts "**** ERROR **** \nDid not receive valid response.\n"
+    end
+    self.send_request_on_save = false
+    self
+  end
+
+  def self.ai_models
+    @models = openai_client.models.list
   end
 end

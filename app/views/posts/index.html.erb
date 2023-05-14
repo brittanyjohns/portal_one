@@ -1,11 +1,22 @@
 <p style="color: green"><%= notice %></p>
 <h1>Posts</h1>
-<div id="posts">
-  <% @posts.each do |post| %>
-    <p>
-      <%= link_to post.name.titleize, post %><br/>
-      <small><%=post.response_type %></small>
-    </p>
-  <% end %>
+<div class="row">
+  <div class="col-md-4" id="posts">
+    <% @posts.images.each do |post| %>
+      <p>
+        <%= link_to post.name&.titleize || 'View Post', post %><br/>
+        <small><%=post.response_type %></small>
+      </p>
+    <% end %>
+  </div>
+  <div class="col-md-2"></div>
+  <div class="col-md-4" id="posts">
+    <% @posts.text.each do |post| %>
+      <p>
+        <%= link_to post.name&.titleize || 'View Post', post %><br/>
+        <small><%=post.response_type %></small>
+      </p>
+    <% end %>
+  </div>
 </div>
 <%= link_to "New post", new_post_path %>

@@ -9,3 +9,10 @@
   <%= @post.content %>
   <p class="small float-end">Written by: <%= "Anonymous" %> </p>
 </div>
+<div class="post-body clearfix">
+  <h3>Documents : <%= @post.docs.count %>
+    <% @post.docs.each do |doc| %>
+      <%= render doc %>
+    <% end %>
+    <p class="small float-end">Written by: <%= "Anonymous" %> </p>
+  </div>

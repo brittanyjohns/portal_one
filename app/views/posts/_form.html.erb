@@ -21,6 +21,14 @@
     <%= form.select :response_type,
         options_for_select(Post.response_type_select, selected: form.object.response_type), class: "form-control" %>
   </div>
+  <div class="well">
+    <%= form.fields_for :docs do |doc| %>
+      <%= doc.label :name %>
+      <%= doc.text_field :name %>
+      <%= doc.label :main_image %>
+      <%= doc.file_field :main_image %>
+    <% end %>
+  </div>
   <div>
     <%= form.submit %>
   </div>
