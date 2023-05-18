@@ -10,9 +10,18 @@
   <p class="small float-end">Written by: <%= "Anonymous" %> </p>
 </div>
 <div class="post-body clearfix">
-  <h3>Documents : <%= @post.docs.count %>
-    <% @post.docs.each do |doc| %>
-      <%= render doc %>
-    <% end %>
-    <p class="small float-end">Written by: <%= "Anonymous" %> </p>
-  </div>
+  <h3>Documents : <%= @post.docs.count %></h3>
+  <% @post.docs.each do |doc| %>
+    <%= render doc %>
+  <% end %>
+</div>
+<div class="post-body clearfix">
+  <h3>Messages : <%= @post.messages.count %></h3>
+  <% @post.messages.each do |message| %>
+    <%= render message if message.id %>
+  <% end %>
+</div>
+<div class="post-body clearfix">
+  <h3>New Message</h3>
+  <%= render 'message_form', post: @post %>
+</div>

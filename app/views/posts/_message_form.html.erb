@@ -1,0 +1,19 @@
+<%= form_with(model: post) do |form| %>
+  <% if post.errors.any? %>
+    <%= render 'errors', post: post %>
+  <% end %>
+  <div class="message-form">
+    <%= form.fields_for :messages do |message| %>
+      <% if !message.object.id %>
+        <%= message.label :role %>
+        <%= message.text_field :role, class: "form-control" %>
+        <%= message.label :content %>
+        <%= message.text_field :content, class: "form-control" %>
+      <% end %>
+      <hr/>
+    <% end %>
+  </div>
+  <div class="row">
+    <%= button_tag "Submit", class: "btn btn-primary" %>
+  </div>
+<% end %>

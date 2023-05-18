@@ -1,5 +1,6 @@
 class PostsController < ApplicationController
   before_action :set_post, only: %i[ show edit update destroy ]
+  include ActiveStorage::SetCurrent
 
   # GET /posts or /posts.json
   def index
@@ -8,16 +9,20 @@ class PostsController < ApplicationController
 
   # GET /posts/1 or /posts/1.json
   def show
+    @message = @post.messages.new
   end
 
   # GET /posts/new
   def new
     @post = Post.new
     @doc = @post.docs.new
+    @message = @post.messages.new
   end
 
   # GET /posts/1/edit
   def edit
+    @doc = @post.docs.new
+    @message = @post.messages.new
   end
 
   # POST /posts or /posts.json
@@ -68,6 +73,28 @@ class PostsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def post_params
-    params.require(:post).permit(:name, :body, :send_request_on_save, :response_type, docs_attributes: [:_destroy, :id, :name, :doc_type, :main_image])
+    check_doc_image
+    params.require(:post).permit(:name, :body, :send_request_on_save, :response_type,
+                                 docs_attributes: [:_destroy, :id, :name, :doc_type, :main_image],
+                                 messages_attributes: [:_destroy, :id, :role, :content])
+  end
+
+  def check_doc_image
+    docs_attributes = params["post"]["docs_attributes"]
+    puts "docs_attributes: #{docs_attributes}"
+    if docs_attributes
+      docs_attributes.each_value do |doc|
+        main_image = doc["main_image"]
+        if main_image
+          puts "#{main_image.class} saving main_image\n#{main_image.inspect}"
+        else
+          puts "no main_image"
+          params["post"]["docs_attributes"] = nil
+          puts "new params #{params}"
+        end
+      end
+    else
+      puts "no docs to save"
+    end
   end
 end

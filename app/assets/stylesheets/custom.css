@@ -68,3 +68,13 @@
   height: 250px;
   width: 75%;
 }
+
+.post-form {
+  border: 1px black solid;
+  padding: 30px;
+}
+.doc-form {
+  margin: 30px;
+  border-top: 1px gray solid;
+  padding: 10px;
+}

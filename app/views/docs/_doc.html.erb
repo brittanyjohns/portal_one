@@ -1,3 +1,5 @@
 <%= doc.name %>
 <hr>
-<%= image_tag doc.main_image %>
+<% if doc.main_image %>
+  <%= image_tag doc.main_image %>
+<% end %>

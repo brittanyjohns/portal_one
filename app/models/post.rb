@@ -1,10 +1,25 @@
+# == Schema Information
+#
+# Table name: posts
+#
+#  id                   :integer          not null, primary key
+#  body                 :text
+#  name                 :string
+#  response_type        :integer          default("image")
+#  send_request_on_save :boolean          default(FALSE)
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#
 class Post < ApplicationRecord
   has_many :docs, as: :documentable
+  has_many :messages
   has_rich_text :content
+  validates :name, presence: true
   before_save :send_to_ai, if: :send_request_on_save
   accepts_nested_attributes_for :docs, allow_destroy: true
+  accepts_nested_attributes_for :messages, allow_destroy: true
 
-  scope :images, -> {  where(response_type: 0) }
+  scope :images, -> { where(response_type: 0) }
   scope :text, -> { where(response_type: 1) }
 
   enum response_type: { image: 0, text: 1 }
@@ -59,6 +74,28 @@ class Post < ApplicationRecord
 
   def create_completion
     response = openai_client.completions(parameters: { model: DEFAULT_MODEL, prompt: name })
+    if response
+      choices = response["choices"].map { |c| "<p class='ai-response'>#{c["text"]}</p>" }.join("\n")
+      puts "CHOICES: #{choices}"
+      self.body = response
+      self.content.body = "<p class='ai-response'>#{choices[0]}</p>"
+    else
+      puts "**** ERROR **** \nDid not receive valid response.\n"
+    end
+    self.send_request_on_save = false
+    self
+  end
+
+  def create_chat
+    response = openai_client.chat(
+      parameters: {
+        model: "gpt-3.5-turbo", # Required.
+        messages: [{ role: "user", content: "Hello!" }], # Required.
+        temperature: 0.7,
+      },
+    )
+    puts response.dig("choices", 0, "message", "content")
+    # => "Hello! How may I assist you today?"
     if response
       choices = response["choices"].map { |c| "<p class='ai-response'>#{c["text"]}</p>" }.join("\n")
       puts "CHOICES: #{choices}"

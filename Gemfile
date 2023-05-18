@@ -89,3 +89,7 @@ gem "figaro"
 
 # Open AI
 gem "ruby-openai"
+
+group :development do
+  gem "annotate"
+end
