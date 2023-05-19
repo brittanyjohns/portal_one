@@ -93,3 +93,5 @@ gem "ruby-openai"
 group :development do
   gem "annotate"
 end
+
+gem "espeak-ruby", require: "espeak"

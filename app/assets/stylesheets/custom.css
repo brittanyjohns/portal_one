@@ -78,3 +78,12 @@
   border-top: 1px gray solid;
   padding: 10px;
 }
+.message-form {
+  /* margin: 30px; */
+  border: 3px gray solid;
+  padding: 10px;
+}
+
+.ai_img {
+  max-width: 400px;
+}

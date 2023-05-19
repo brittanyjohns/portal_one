@@ -14,6 +14,7 @@ class PostsController < ApplicationController
 
   # GET /posts/new
   def new
+    @show_docs = false
     @post = Post.new
     @doc = @post.docs.new
     @message = @post.messages.new
@@ -74,6 +75,7 @@ class PostsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def post_params
     check_doc_image
+    check_chat_messages
     params.require(:post).permit(:name, :body, :send_request_on_save, :response_type,
                                  docs_attributes: [:_destroy, :id, :name, :doc_type, :main_image],
                                  messages_attributes: [:_destroy, :id, :role, :content])
@@ -89,12 +91,27 @@ class PostsController < ApplicationController
           puts "#{main_image.class} saving main_image\n#{main_image.inspect}"
         else
           puts "no main_image"
-          params["post"]["docs_attributes"] = nil
+          params["post"].delete("docs_attributes")
           puts "new params #{params}"
         end
       end
     else
       puts "no docs to save"
+    end
+  end
+
+  def check_chat_messages
+    messages_attributes = params["post"]["messages_attributes"]
+    puts "messages_attributes: #{messages_attributes}"
+    if messages_attributes
+      messages_attributes.each_pair do |key, val|
+        role = val["role"]
+        if role.empty?
+          params["post"]["messages_attributes"].delete(key)
+        end
+      end
+    else
+      puts "no messages to save"
     end
   end
 end

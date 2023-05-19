@@ -11,15 +11,17 @@
       <%= form.label :name %>
       <%= form.text_field :name, class: "form-control" %>
     </div>
-    <div class="doc-form">
-      <%= form.fields_for :docs do |doc| %>
-        <%= doc.label :name %>
-        <%= doc.text_field :name, class: "form-control" %>
-        <%= doc.label :main_image %>
-        <%= doc.file_field :main_image, class: "form-control" %>
-        <hr/>
-      <% end %>
-    </div>
+    <% if @show_docs %>
+      <div class="doc-form">
+        <%= form.fields_for :docs do |doc| %>
+          <%= doc.label :name %>
+          <%= doc.text_field :name, class: "form-control" %>
+          <%= doc.label :main_image %>
+          <%= doc.file_field :main_image, class: "form-control" %>
+          <hr/>
+        <% end %>
+      </div>
+    <% end %>
     <div class='form-group'>
       <%= form.label :send_request_on_save %>
       <%= form.check_box :send_request_on_save %>

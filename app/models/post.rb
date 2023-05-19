@@ -21,9 +21,11 @@ class Post < ApplicationRecord
 
   scope :images, -> { where(response_type: 0) }
   scope :text, -> { where(response_type: 1) }
+  scope :chat, -> { where(response_type: 2) }
 
-  enum response_type: { image: 0, text: 1 }
+  enum response_type: { image: 0, text: 1, chat: 2 }
   DEFAULT_MODEL = "text-davinci-001"
+  TURBO_MODEL = "gpt-3.5-turbo"
 
   def self.response_type_select
     response_types.keys.map { |k| [k.titleize, k] }
@@ -33,6 +35,25 @@ class Post < ApplicationRecord
     puts "Sending response_type: #{response_type}"
     create_image if response_type == "image"
     create_completion if response_type == "text"
+    create_chat if response_type == "chat"
+  end
+
+  def image?
+    response_type == "image"
+  end
+
+  def text?
+    response_type == "text"
+  end
+
+  def chat?
+    response_type == "chat"
+  end
+
+  def format_messages
+    messages.map do |msg|
+      { role: msg.role, content: msg.content }
+    end
   end
 
   def self.openai_client
@@ -46,7 +67,7 @@ class Post < ApplicationRecord
   def self.create_image(prompt)
     post = Post.create(name: prompt)
     begin
-      response = openai_client.images.generate(parameters: { prompt: prompt, size: "1024x1024" })
+      response = openai_client.images.generate(parameters: { prompt: prompt, size: "512x512" })
       img_url = response.dig("data", 0, "url")
       puts "\n** response from generating AI image **\n #{response.inspect}"
     rescue => e
@@ -77,8 +98,13 @@ class Post < ApplicationRecord
     if response
       choices = response["choices"].map { |c| "<p class='ai-response'>#{c["text"]}</p>" }.join("\n")
       puts "CHOICES: #{choices}"
+      response_body = "<p class='ai-response'>#{choices[0]}</p>"
       self.body = response
-      self.content.body = "<p class='ai-response'>#{choices[0]}</p>"
+      self.content.body = response_body
+      self.send_request_on_save = false
+      self.save!
+      rich_text_content = ActionText::RichText.find_or_initialize_by(record_type: "Post", record_id: post.id, name: "content", body: response_body)
+      rich_text_content.save!
     else
       puts "**** ERROR **** \nDid not receive valid response.\n"
     end
@@ -87,20 +113,42 @@ class Post < ApplicationRecord
   end
 
   def create_chat
+    opts = {
+      model: TURBO_MODEL, # Required.
+      messages: format_messages, # Required.
+      temperature: 0.7,
+    }
+    puts "opts: #{opts.inspect}"
     response = openai_client.chat(
-      parameters: {
-        model: "gpt-3.5-turbo", # Required.
-        messages: [{ role: "user", content: "Hello!" }], # Required.
-        temperature: 0.7,
-      },
+      parameters: opts,
     )
+    puts "Totals response: #{response.inspect}\n\n"
     puts response.dig("choices", 0, "message", "content")
     # => "Hello! How may I assist you today?"
     if response
-      choices = response["choices"].map { |c| "<p class='ai-response'>#{c["text"]}</p>" }.join("\n")
-      puts "CHOICES: #{choices}"
-      self.body = response
-      self.content.body = "<p class='ai-response'>#{choices[0]}</p>"
+      role = response.dig("choices", 0, "message", "role")
+      content = response.dig("choices", 0, "message", "content")
+
+      self.body = format_messages
+      self.content.body = "<p class='ai-response'>#{response}</p>"
+      self.send_request_on_save = false
+      self.save!
+      text = "This is a\nmultiline\nstring."
+
+      new_line_regex = /\n/
+      matches = text.scan(new_line_regex)
+
+      puts "Found #{matches.size} new line characters."
+      puts matches.inspect
+
+      msg = messages.new(role: role, content: content)
+      new_line_regex = /\n/
+      replaced_text = content.gsub(new_line_regex, "<br>")
+
+      puts replaced_text
+      msg.displayed_content.body = replaced_text
+
+      msg.save!
     else
       puts "**** ERROR **** \nDid not receive valid response.\n"
     end
