@@ -75,15 +75,21 @@
 }
 .doc-form {
   margin: 30px;
-  border-top: 1px gray solid;
+  border: 8px teal solid;
   padding: 10px;
 }
 .message-form {
   /* margin: 30px; */
-  border: 3px gray solid;
+  border: 8px teal solid;
   padding: 10px;
 }
 
-.ai_img {
-  max-width: 400px;
+.message-content {
+  background-color: blue;
+}
+.test {
+  background-color: blue !important;
+}
+.hidden {
+  display: none;
 }

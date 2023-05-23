@@ -1,32 +1,34 @@
-<div class="post-form">
+<div class="post-form" data-controller='dynamic-select'>
   <%= form_with(model: post) do |form| %>
     <% if post.errors.any? %>
       <%= render 'errors', post: post %>
     <% end %>
     <div class='form-group'>
       <%= form.select :response_type,
-        options_for_select(Post.response_type_select, selected: form.object.response_type), class: "form-control" %>
+        options_for_select(Post.response_type_select, selected: form.object.display_response_type),
+        {},
+        'data-dynamic-select-target': 'select',
+        'data-action': 'dynamic-select#selected', class: "form-control" %>
     </div>
     <div class='form-group'>
       <%= form.label :name %>
       <%= form.text_field :name, class: "form-control" %>
+      <div class='form-group'>
+        <%= form.label :send_request_on_save %>
+        <%= form.check_box :send_request_on_save %>
+      </div>
     </div>
-    <% if @show_docs %>
+    <div class="row" data-dynamic-select-target='doc'>
       <div class="doc-form">
         <%= form.fields_for :docs do |doc| %>
           <%= doc.label :name %>
           <%= doc.text_field :name, class: "form-control" %>
           <%= doc.label :main_image %>
           <%= doc.file_field :main_image, class: "form-control" %>
-          <hr/>
         <% end %>
       </div>
-    <% end %>
-    <div class='form-group'>
-      <%= form.label :send_request_on_save %>
-      <%= form.check_box :send_request_on_save %>
     </div>
-    <div class="row">
+    <div class="row" data-dynamic-select-target='chat'>
       <div class="message-form">
         <%= form.fields_for :messages do |message| %>
           <%= message.label :role %>

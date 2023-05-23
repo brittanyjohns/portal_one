@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  resources :groups
+  resources :words do
+    post "speak", on: :member
+  end
+  resources :categories
   resources :posts
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

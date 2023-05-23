@@ -95,3 +95,5 @@ group :development do
 end
 
 gem "espeak-ruby", require: "espeak"
+
+gem "simple_calendar", "~> 2.4"

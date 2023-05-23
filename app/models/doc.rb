@@ -16,10 +16,31 @@
 #
 #  index_doc_on_documentable  (documentable_type,documentable_id)
 #
+require "open-uri"
+
 class Doc < ApplicationRecord
   has_one_attached :main_image
 
-  # def main_image_on_disk
-  #   ActiveStorage::Blob.service.path_for(main_image.key)
-  # end
+  def main_image_on_disk
+    ActiveStorage::Blob.service.path_for(main_image.key)
+  end
+
+  def grab_image(url, create_word = false)
+    begin
+      downloaded_image = URI.open(url,
+                                  "User-Agent" => "Ruby/#{RUBY_VERSION}",
+                                  "From" => "foo@bar.invalid",
+                                  "Referer" => "http://www.ruby-lang.org/")
+      puts "downloaded image: #{downloaded_image.inspect}"
+      sleep 2
+      self.main_image.attach(io: downloaded_image, filename: "#{name}_#{id}.png")
+      Word.find_or_initialize_by(name: name) if create_word
+      sleep 3
+    rescue => e
+      puts "ERROR: #{e.inspect}"
+      raise e
+    end
+
+    return
+  end
 end

@@ -1,0 +1,19 @@
+<div id="<%= dom_id word %>">
+  <p>
+    <strong>Name:</strong>
+    <%= word.name %>
+  </p>
+  <%= button_to "speak", speak_word_path(word), method: :post %>
+  <p>
+    <strong>Category:</strong>
+    <%= word.category_id %>
+  </p>
+  <p>
+    <strong>Favorite:</strong>
+    <%= word.favorite %>
+  </p>
+  <p>
+    <strong>Group:</strong>
+    <%= word.group_id %>
+  </p>
+</div>

@@ -16,19 +16,25 @@ class Post < ApplicationRecord
   has_rich_text :content
   validates :name, presence: true
   before_save :send_to_ai, if: :send_request_on_save
+  after_create :send_to_ai, if: :send_request_on_save
   accepts_nested_attributes_for :docs, allow_destroy: true
   accepts_nested_attributes_for :messages, allow_destroy: true
 
   scope :images, -> { where(response_type: 0) }
   scope :text, -> { where(response_type: 1) }
   scope :chat, -> { where(response_type: 2) }
+  scope :doc, -> { where(response_type: 3) }
 
-  enum response_type: { image: 0, text: 1, chat: 2 }
+  enum response_type: { image: 0, text: 1, chat: 2, doc: 3 }
   DEFAULT_MODEL = "text-davinci-001"
   TURBO_MODEL = "gpt-3.5-turbo"
 
   def self.response_type_select
     response_types.keys.map { |k| [k.titleize, k] }
+  end
+
+  def display_response_type
+    response_type || "text"
   end
 
   def send_to_ai
@@ -48,6 +54,10 @@ class Post < ApplicationRecord
 
   def chat?
     response_type == "chat"
+  end
+
+  def doc?
+    response_type == "doc"
   end
 
   def format_messages
@@ -81,8 +91,12 @@ class Post < ApplicationRecord
     post.save!
   end
 
+  def create_image_doc(url, img_name)
+    new_doc = docs.create(name: img_name, raw_body: url).grab_image(url, true)
+  end
+
   def create_image
-    response = openai_client.images.generate(parameters: { prompt: name, size: "1024x1024" })
+    response = openai_client.images.generate(parameters: { prompt: name, size: "512x512" })
     if response
       img_url = response.dig("data", 0, "url")
       self.body = response
@@ -91,6 +105,8 @@ class Post < ApplicationRecord
       puts "**** ERROR **** \nDid not receive valid response.\n"
     end
     self.send_request_on_save = false
+    self.save!
+    create_image_doc(img_url, name)
   end
 
   def create_completion
