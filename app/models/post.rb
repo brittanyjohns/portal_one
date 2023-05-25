@@ -26,8 +26,6 @@ class Post < ApplicationRecord
   scope :doc, -> { where(response_type: 3) }
 
   enum response_type: { image: 0, text: 1, chat: 2, doc: 3 }
-  DEFAULT_MODEL = "text-davinci-001"
-  TURBO_MODEL = "gpt-3.5-turbo"
 
   def self.response_type_select
     response_types.keys.map { |k| [k.titleize, k] }
@@ -41,7 +39,7 @@ class Post < ApplicationRecord
     puts "Sending response_type: #{response_type}"
     create_image if response_type == "image"
     create_completion if response_type == "text"
-    create_chat if response_type == "chat"
+    create_chat! if response_type == "chat"
   end
 
   def image?
@@ -60,46 +58,63 @@ class Post < ApplicationRecord
     response_type == "doc"
   end
 
+  def last_message
+    messages.last&.displayed_content&.body&.to_s || messages.last&.content
+  end
+
+  def last_message_raw_string
+    messages.last&.content
+  end
+
+  def reply(message_content)
+    puts "Hey - you're not supposed to be chatting...#{response_type}\nProceeding anyways - You're welcome." unless image?
+    messages.create!(role: "user", content: message_content)
+    create_chat!
+  end
+
   def format_messages
-    messages.map do |msg|
-      { role: msg.role, content: msg.content }
+    if messages.blank?
+      [messages.create!(role: "system", content: "You are a funny and sarcastic, but also very helpful, assistant.")]
+    else
+      messages.map do |msg|
+        { role: msg.role, content: msg.content }
+      end
     end
   end
 
-  def self.openai_client
-    @openai_client ||= OpenAI::Client.new(access_token: ENV.fetch("OPENAI_ACCESS_TOKEN"))
-  end
-
-  def openai_client
-    @openai_client ||= OpenAI::Client.new(access_token: ENV.fetch("OPENAI_ACCESS_TOKEN"))
+  def open_ai_opts
+    { prompt: name, messages: format_messages }
   end
 
   def self.create_image(prompt)
-    post = Post.create(name: prompt)
     begin
-      response = openai_client.images.generate(parameters: { prompt: prompt, size: "512x512" })
-      img_url = response.dig("data", 0, "url")
-      puts "\n** response from generating AI image **\n #{response.inspect}"
+      img_url = OpenAiClient.new({ prompt: prompt }).create_image
+      if img_url
+        puts "\n** response from generating AI image **\n #{img_url}"
+      else
+        puts "**** ERROR **** \nDid not receive valid img_url.\n"
+      end
     rescue => e
       puts "\n** ERROR generating AI image **\n #{e.inspect}"
     end
+    post = Post.create(name: prompt)
 
-    post.body = response
+    post.body = img_url
     post.send_request_on_save = false
     rich_text_content = ActionText::RichText.find_or_initialize_by(record_type: "Post", record_id: post.id, name: "content", body: "<img src='#{img_url}' class='ai_img' id='ai_img_#{post.id}'></img>")
     rich_text_content.save!
     post.save!
+    create_image_doc(img_url, post.name)
   end
 
   def create_image_doc(url, img_name)
-    new_doc = docs.create(name: img_name, raw_body: url).grab_image(url, true)
+    new_doc = docs.create(name: img_name, raw_body: url).grab_image(url)
   end
 
   def create_image
-    response = openai_client.images.generate(parameters: { prompt: name, size: "512x512" })
-    if response
-      img_url = response.dig("data", 0, "url")
-      self.body = response
+    img_url = OpenAiClient.new(open_ai_opts).create_image
+    if img_url
+      self.body = img_url
       self.content.body = "<img src='#{img_url}' class='ai_img'></img>"
     else
       puts "**** ERROR **** \nDid not receive valid response.\n"
@@ -110,11 +125,9 @@ class Post < ApplicationRecord
   end
 
   def create_completion
-    response = openai_client.completions(parameters: { model: DEFAULT_MODEL, prompt: name })
+    response = OpenAiClient.new(open_ai_opts).create_completion
     if response
-      choices = response["choices"].map { |c| "<p class='ai-response'>#{c["text"]}</p>" }.join("\n")
-      puts "CHOICES: #{choices}"
-      response_body = "<p class='ai-response'>#{choices[0]}</p>"
+      response_body = "<p class='ai-response'>#{response}</p>"
       self.body = response
       self.content.body = response_body
       self.send_request_on_save = false
@@ -128,22 +141,12 @@ class Post < ApplicationRecord
     self
   end
 
-  def create_chat
-    opts = {
-      model: TURBO_MODEL, # Required.
-      messages: format_messages, # Required.
-      temperature: 0.7,
-    }
-    puts "opts: #{opts.inspect}"
-    response = openai_client.chat(
-      parameters: opts,
-    )
+  def create_chat!
+    response = OpenAiClient.new(open_ai_opts).create_chat
     puts "Totals response: #{response.inspect}\n\n"
-    puts response.dig("choices", 0, "message", "content")
-    # => "Hello! How may I assist you today?"
     if response
-      role = response.dig("choices", 0, "message", "role")
-      content = response.dig("choices", 0, "message", "content")
+      role = response[:role]
+      content = response[:content]
 
       self.body = format_messages
       self.content.body = "<p class='ai-response'>#{response}</p>"

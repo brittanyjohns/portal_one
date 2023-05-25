@@ -1,0 +1,18 @@
+<table class="table table-bordered table-hover">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Word</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% words.each do |word| %>
+      <tr>
+        <td><%= word.id %></td>
+        <td><%= link_to word.name, word_path(word) %>
+          <%= button_to icon('fa-regular', 'comment-dots'), speak_word_path(word), class: "btn", method: :post %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

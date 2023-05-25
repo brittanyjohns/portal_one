@@ -9,4 +9,5 @@
 #
 class Group < ApplicationRecord
   has_many :words
+  has_many :categories, -> { distinct }, through: :words
 end

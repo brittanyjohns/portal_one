@@ -1,0 +1,16 @@
+<table class="table table-bordered table-hover table-sm">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Group</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% groups.each do |group| %>
+      <tr>
+        <td><%= group.id %></td>
+        <td><%= group.name %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

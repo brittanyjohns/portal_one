@@ -9,4 +9,8 @@
 #
 class Category < ApplicationRecord
   has_many :words
+
+  def print_words
+    words.map(&:name)
+  end
 end

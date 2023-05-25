@@ -8,6 +8,13 @@ class WordsController < ApplicationController
 
   def speak
     @word.speak
+    # respond_to do |format|
+    #   if @word.speak
+    #     format.turbo_stream
+    #   else
+    #     format.html { render :new, status: :unprocessable_entity }
+    #   end
+    # end
   end
 
   # GET /words/1 or /words/1.json

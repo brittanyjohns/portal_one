@@ -78,7 +78,9 @@ gem "devise"
 # gem "country_select"
 
 # Icons
-gem "font-awesome-rails", "~> 4.7"
+# gem "font-awesome-rails", "~> 4.7"
+gem "font-awesome-sass", "~> 6.4.0"
+
 # HTTP requests
 gem "faraday"
 
@@ -88,7 +90,8 @@ gem "dry-initializer"
 gem "figaro"
 
 # Open AI
-gem "ruby-openai"
+# gem "ruby-openai"
+gem "ruby-openai", "~> 4.1"
 
 group :development do
   gem "annotate"
@@ -97,3 +100,5 @@ end
 gem "espeak-ruby", require: "espeak"
 
 gem "simple_calendar", "~> 2.4"
+
+gem "sidekiq", "~> 7.1"

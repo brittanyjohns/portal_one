@@ -25,7 +25,7 @@ class Doc < ApplicationRecord
     ActiveStorage::Blob.service.path_for(main_image.key)
   end
 
-  def grab_image(url, create_word = false)
+  def grab_image(url)
     begin
       downloaded_image = URI.open(url,
                                   "User-Agent" => "Ruby/#{RUBY_VERSION}",
@@ -34,8 +34,6 @@ class Doc < ApplicationRecord
       puts "downloaded image: #{downloaded_image.inspect}"
       sleep 2
       self.main_image.attach(io: downloaded_image, filename: "#{name}_#{id}.png")
-      Word.find_or_initialize_by(name: name) if create_word
-      sleep 3
     rescue => e
       puts "ERROR: #{e.inspect}"
       raise e

@@ -1,0 +1,40 @@
+I am so initialized!
+                                  Prefix Verb   URI Pattern                                                                                       Controller#Action
+                                  groups GET    /groups(.:format)                                                                                 groups#index
+                                         POST   /groups(.:format)                                                                                 groups#create
+                               new_group GET    /groups/new(.:format)                                                                             groups#new
+                              edit_group GET    /groups/:id/edit(.:format)                                                                        groups#edit
+                                   group GET    /groups/:id(.:format)                                                                             groups#show
+                                         PATCH  /groups/:id(.:format)                                                                             groups#update
+                                         PUT    /groups/:id(.:format)                                                                             groups#update
+                                         DELETE /groups/:id(.:format)                                                                             groups#destroy
+                              speak_word POST   /words/:id/speak(.:format)                                                                        words#speak
+                                   words GET    /words(.:format)                                                                                  words#index
+                                         POST   /words(.:format)                                                                                  words#create
+                                new_word GET    /words/new(.:format)                                                                              words#new
+                               edit_word GET    /words/:id/edit(.:format)                                                                         words#edit
+                                    word GET    /words/:id(.:format)                                                                              words#show
+                                         PATCH  /words/:id(.:format)                                                                              words#update
+                                         PUT    /words/:id(.:format)                                                                              words#update
+                                         DELETE /words/:id(.:format)                                                                              words#destroy
+                              categories GET    /categories(.:format)                                                                             categories#index
+                                         POST   /categories(.:format)                                                                             categories#create
+                            new_category GET    /categories/new(.:format)                                                                         categories#new
+                           edit_category GET    /categories/:id/edit(.:format)                                                                    categories#edit
+                                category GET    /categories/:id(.:format)                                                                         categories#show
+                                         PATCH  /categories/:id(.:format)                                                                         categories#update
+                                         PUT    /categories/:id(.:format)                                                                         categories#update
+                                         DELETE /categories/:id(.:format)                                                                         categories#destroy
+                                   posts GET    /posts(.:format)                                                                                  posts#index
+                                         POST   /posts(.:format)                                                                                  posts#create
+                                new_post GET    /posts/new(.:format)                                                                              posts#new
+                               edit_post GET    /posts/:id/edit(.:format)                                                                         posts#edit
+                                    post GET    /posts/:id(.:format)                                                                              posts#show
+                                         PATCH  /posts/:id(.:format)                                                                              posts#update
+                                         PUT    /posts/:id(.:format)                                                                              posts#update
+                                         DELETE /posts/:id(.:format)                                                                              posts#destroy
+                      rails_health_check GET    /up(.:format)                                                                                     rails/health#show
+                                    root GET    /                                                                                                 posts#index
+        turbo_recede_historical_location GET    /recede_historical_location(.:format)                                                             turbo/native/navigation#recede
+        turbo_resume_historical_location GET    /resume_historical_location(.:format)                                                             turbo/native/navigation#resume
+       turbo_refresh_historical_location GET    /refresh_historical_location(.:format)                                                            turbo/native/navigation#refresh
