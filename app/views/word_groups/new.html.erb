@@ -1,0 +1,11 @@
+<h1>New word group</h1>
+<%= render "form", word_group: @word_group %>
+<br>
+<% if @words %>
+  <% @words.each do |word| %>
+    <%= word.id %>: <%= word.name %>
+  <% end %>
+<% end %>
+<div>
+  <%= link_to "Back to word groups", word_groups_path %>
+</div>

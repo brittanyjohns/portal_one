@@ -1,5 +1,16 @@
+<div class="row">
+  <% if @words %>
+    <%= render 'select_words', words: @words, group_id: @group.id %>
+    <hr>
+    <hr>
+    <% @words.each do |word| %>
+      <%= word.id %>: <%= word.name %><br>
+      <%= word_link(@group, word) %>
+    <% end %>
+  <% end %>
+</div>
 <div class="container">
-  <%= print_grid(@group.words) %>
+  <%= print_grid(@group.words.favorites, 3, true) %>
 </div>
 <div class="row">
   <hr>
@@ -17,7 +28,7 @@
       <tbody>
         <tr>
           <td colspan="4" class="scrollable-div ">
-            <%= render 'words/table', words: category.words %>
+            <%= render 'words/table', words: category.words.favorites %>
           </td>
         </tr>
       </tbody>

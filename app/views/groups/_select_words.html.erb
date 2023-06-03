@@ -1,0 +1,10 @@
+<%= simple_form_for :word_group, url: "/groups/#{group_id}/select_words", method: :post do |form| %>
+  <div class="col-md-12">
+    <div class="clearfix">
+      <div class="form-control" role="group" aria-label="Vertical button group">
+        <%= form.input :word, collection: @words, as: :check_boxes %>
+      </div>
+    </div>
+    <%= form.submit "SAVE", id: "save-btn", class: "btn btn-success" %>
+  </div>
+<% end %>

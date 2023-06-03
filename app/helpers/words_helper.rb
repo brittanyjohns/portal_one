@@ -1,6 +1,6 @@
 module WordsHelper
-  def display_main_image(main_image, size = "200")
-    image_tag main_image, size: size
+  def display_main_image(main_image, size = "500")
+    image_tag main_image, class: "word-display"
   end
 
   def image_link(word)
@@ -9,13 +9,16 @@ module WordsHelper
         display_main_image(word.main_image)
       end
     else
-      puts "Nope"
-      link_to word.name, speak_word_path(word), data: { turbo_method: :post }
+      speech_button(word)
     end
   end
 
   def speech_button(word)
     button_to icon("fa-regular", "comment-dots"), speak_word_path(word), class: "btn", method: :post
+  end
+
+  def edit_word_button(word)
+    link_to icon("fa-solid", "pencil"), edit_word_path(word), class: "btn"
   end
 
   def view_word_button(word)
@@ -27,12 +30,17 @@ module WordsHelper
     icon("fa-#{star_type}", "star")
   end
 
-  def print_grid(words, columns = 4)
+  def print_grid(words, columns = 4, show_edit_btn = false)
     str = ""
     words.each_slice(columns) do |batch|
       str += "<div class='row'>"
       batch.each do |word|
-        str += "<div class='col'>#{image_link(word)}#{view_word_button(word)}</div>"
+        show_edit_btn = show_edit_btn || word.no_saved_images
+        str += "<div class='col'>"
+        str += word.name if show_edit_btn
+        str += edit_word_button(word) if show_edit_btn
+        str += image_link(word)
+        str += "</div>"
       end
       str += "</div>"
     end

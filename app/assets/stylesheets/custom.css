@@ -98,3 +98,7 @@
   height: 200px; /* Set the desired height */
   overflow: auto; /* Enable scrollbars */
 }
+.word-display {
+  width: 100%;
+  max-width: 525px;
+}

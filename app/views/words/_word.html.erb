@@ -1,14 +1,6 @@
 <div id="<%= dom_id word %>">
   <h2>
-    <%= word.name %> <%= favorite_star(word) %>
+    <%= link_to word.name, word %> <%= favorite_star(word) %>
   </h2>
   <%= image_link(word) %>
-  <p>
-    <strong>Favorite:</strong>
-    <%= word.favorite %>
-  </p>
-  <p>
-    <strong>Group:</strong>
-    <%= word.group.name %>
-  </p>
 </div>

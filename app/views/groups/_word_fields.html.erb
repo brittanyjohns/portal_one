@@ -1,0 +1,11 @@
+<div class='nested-fields box word-fields'>
+  <div class='form-group'>
+    <%= form.hidden_field :_destroy %>
+    <div>
+      <%= form.object %>
+    </div>
+    <small>
+      <%= link_to "Remove", "#", data: { action: "click->nested-form#remove_association" }, class: "btn btn-danger" %>
+    </small>
+  </div>
+</div>

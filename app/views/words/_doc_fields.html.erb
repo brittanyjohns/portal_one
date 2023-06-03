@@ -1,0 +1,13 @@
+<div class='nested-fields'>
+  <div class='form-group'>
+    <%= form.hidden_field :_destroy %>
+    <%= form.text_field :name, placeholder: 'Document Name', class: 'form-control' %>
+    <div class="form-inputs">
+      <%= form.text_field :doc_type, placeholder: 'Document Type', class: 'form-control' %>
+    </div>
+    <%= form.file_field :main_image, class: 'form-control' %>
+    <small>
+      <%= link_to "Remove Doc", "#", class: "btn btn-danger", data: { action: "click->nested-form#remove_association" } %>
+    </small>
+  </div>
+</div>

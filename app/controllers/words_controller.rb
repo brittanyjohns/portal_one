@@ -3,7 +3,7 @@ class WordsController < ApplicationController
 
   # GET /words or /words.json
   def index
-    @words = Word.all
+    @words = Word.includes(:docs).take(10)
   end
 
   def speak
@@ -72,11 +72,11 @@ class WordsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_word
-    @word = Word.find(params[:id])
+    @word = Word.includes(:docs).find(params[:id])
   end
 
   # Only allow a list of trusted parameters through.
   def word_params
-    params.require(:word).permit(:name, :category_id, :favorite, :group_id)
+    params.require(:word).permit(:name, :category_id, :favorite, :picture_description, :send_request_on_save, docs_attributes: [:_destroy, :id, :name, :doc_type, :main_image])
   end
 end

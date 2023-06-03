@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Word groups</h1>
+
+<div id="word_groups">
+  <% @word_groups.each do |word_group| %>
+    <%= render word_group %>
+    <p>
+      <%= link_to "Show this word group", word_group %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New word group", new_word_group_path %>

@@ -1,37 +1,18 @@
-<%= form_with(model: word) do |form| %>
-  <% if word.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(word.errors.count, "error") %> prohibited this word from being saved:</h2>
-
-      <ul>
-        <% word.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+<%= simple_form_for word do |f| %>
+  <%= f.association :category %>
+  <%= f.input :name %>
+  <%= f.input :picture_description %>
+  <%= f.input :send_request_on_save %>
+  <hr>
+  <div data-controller="nested-form" data-nested-form-index-value='DOC_RECORD'>
+    <template data-nested-form-target='template'>
+      <%= f.fields_for :docs, word.docs.new, child_index: 'DOC_RECORD' do |doc| %>
+        <%= render 'doc_upload', form: doc %>
+      <% end %>
+    </template>
+    <div data-nested-form-target="add_item">
+      <%= link_to "Add Doc", "#", data: { action: "nested-form#add_association" }, class: "btn btn-success" %>
     </div>
-  <% end %>
-
-  <div>
-    <%= form.label :name, style: "display: block" %>
-    <%= form.text_field :name %>
   </div>
-
-  <div>
-    <%= form.label :category_id, style: "display: block" %>
-    <%= form.text_field :category_id %>
-  </div>
-
-  <div>
-    <%= form.label :favorite, style: "display: block" %>
-    <%= form.check_box :favorite %>
-  </div>
-
-  <div>
-    <%= form.label :group_id, style: "display: block" %>
-    <%= form.text_field :group_id %>
-  </div>
-
-  <div>
-    <%= form.submit %>
-  </div>
+  <%= f.button :submit %>
 <% end %>

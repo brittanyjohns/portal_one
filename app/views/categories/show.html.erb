@@ -6,5 +6,5 @@
   <%= button_to "Destroy this category", @category, method: :delete %>
 </div>
 <div class="container">
-  <%= print_grid(@category.words) %>
+  <%= print_grid(@category.words, 4, false) %>
 </div>

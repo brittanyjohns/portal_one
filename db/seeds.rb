@@ -176,10 +176,24 @@ common_words = [
   "bye",
   "yes",
 ]
+existing_word_count = Word.count
+puts "Existing #{existing_word_count} words"
 
-household_items.keys.each { |i| Word.create(name: i, category_id: house_items_category.id, group_id: main_group.id) }
-foods.each { |i| Word.create(name: i, category_id: food_category.id, group_id: main_group.id) }
-animals.each { |i| Word.create(name: i, category_id: animals_category.id, group_id: main_group.id) }
-places.each { |i| Word.create(name: i, category_id: places_category.id, group_id: main_group.id) }
-common_words.each { |i| Word.create(name: i, category_id: common_category.id, group_id: main_group.id) }
-words_with_descriptions.keys.each { |i| Word.create(name: i, category_id: core_items_category.id, group_id: main_group.id) }
+if existing_word_count === 0
+  household_items.each { |k, v| Word.create(name: k, picture_description: v, category_id: house_items_category.id) }
+  foods.each { |i| Word.create(name: i, category_id: food_category.id) }
+  animals.each { |i| Word.create(name: i, category_id: animals_category.id) }
+  places.each { |i| Word.create(name: i, category_id: places_category.id) }
+  common_words.each { |i| Word.create(name: i, category_id: common_category.id) }
+  words_with_descriptions.each { |k, v| Word.create(name: k, picture_description: v, category_id: core_items_category.id) }
+
+  puts "Seeded #{Word.count} words"
+else
+  puts "Skipping word creation"
+end
+user = User.new
+user.email = "test@example.com"
+user.password = "valid_password"
+user.password_confirmation = "valid_password"
+# user.encrypted_password = '#$taawktljasktlw4aaglj'
+user.save!

@@ -1,0 +1,4 @@
+<%= simple_form_for word_group do |f| %>
+  <%= f.association :word, as: :radio_buttons %>
+  <%= f.button :submit %>
+<% end %>
