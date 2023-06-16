@@ -9,6 +9,7 @@ class PostsController < ApplicationController
 
   # GET /posts/1 or /posts/1.json
   def show
+    @post.send_request_on_save = true
     @message = @post.messages.new
   end
 

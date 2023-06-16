@@ -81,13 +81,7 @@ household_items = {
   "sink": "A white sink with a silver faucet. The sink is filled with soapy water, and there are dirty dishes inside waiting to be washed.",
   "toilet": "A white toilet with a lid and a flush handle. The toilet is in a small room called the bathroom. It has a roll of toilet paper",
 }
-main_group = Group.create(name: "main")
-food_category = Category.create(name: "Food & Drink")
-house_items_category = Category.create(name: "Household Items")
-animals_category = Category.create(name: "Animals")
-common_category = Category.create(name: "Common")
-places_category = Category.create(name: "Places")
-core_items_category = Category.create(name: "Core")
+
 foods = [
   "apple",
   "banana",
@@ -180,6 +174,14 @@ existing_word_count = Word.count
 puts "Existing #{existing_word_count} words"
 
 if existing_word_count === 0
+  main_group = Group.create(name: "main")
+  food_category = Category.create(name: "Food & Drink")
+  house_items_category = Category.create(name: "Household Items")
+  animals_category = Category.create(name: "Animals")
+  common_category = Category.create(name: "Common")
+  places_category = Category.create(name: "Places")
+  core_items_category = Category.create(name: "Core")
+
   household_items.each { |k, v| Word.create(name: k, picture_description: v, category_id: house_items_category.id) }
   foods.each { |i| Word.create(name: i, category_id: food_category.id) }
   animals.each { |i| Word.create(name: i, category_id: animals_category.id) }
@@ -195,5 +197,4 @@ user = User.new
 user.email = "test@example.com"
 user.password = "valid_password"
 user.password_confirmation = "valid_password"
-# user.encrypted_password = '#$taawktljasktlw4aaglj'
 user.save!

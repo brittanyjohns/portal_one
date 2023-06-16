@@ -1,10 +1,17 @@
-<%= simple_form_for :word_group, url: "/groups/#{group_id}/select_words", method: :post do |form| %>
-  <div class="col-md-12">
-    <div class="clearfix">
-      <div class="form-control" role="group" aria-label="Vertical button group">
-        <%= form.input :word, collection: @words, as: :check_boxes %>
-      </div>
+<div data-controller="select_words">
+  <%= simple_form_for :group, url: "/groups/#{group.id}/select_words", method: :post do |form| %>
+    <div class="d-grid gap-2">
+      <%= form.submit "SAVE", id: "save-btn", class: "btn btn-success btn-lg" %>
     </div>
-    <%= form.submit "SAVE", id: "save-btn", class: "btn btn-success" %>
-  </div>
-<% end %>
+    <div class="word-wrapper">
+      HELLO
+      <% words.each do |word| -%>
+        <div class="word-container">
+          <%= check_box_tag :word_ids, word.id, group.words.include?(word), :name => 'group[word_ids][]' -%>
+          <%= label_tag :word_ids, word.name -%>
+          <%= word_image_link(word) %>
+        </div>
+      <% end -%>
+    </div>
+  <% end %>
+</div>

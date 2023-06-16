@@ -1,9 +1,9 @@
 class WordsController < ApplicationController
-  before_action :set_word, only: %i[ show edit update destroy speak ]
+  before_action :set_word, only: %i[ show edit update destroy speak generate_image generate_image_variation ]
 
   # GET /words or /words.json
   def index
-    @words = Word.includes(:docs).take(10)
+    @words = Word.includes(:docs).order(name: :desc)
   end
 
   def speak
@@ -15,6 +15,24 @@ class WordsController < ApplicationController
     #     format.html { render :new, status: :unprocessable_entity }
     #   end
     # end
+  end
+
+  def generate_image
+    puts "About to resubmit"
+    resubmit(@word)
+    puts "WORD::: #{@word.inspect}"
+  end
+
+  def generate_image_variation
+    respond_to do |format|
+      if @word.create_image_variation
+        format.html { redirect_to @word, notice: "Word was successfully created." }
+        format.json { render :show, status: :created, location: @word }
+      else
+        format.html { render @word, status: :unprocessable_entity }
+        format.json { render json: @word.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   # GET /words/1 or /words/1.json

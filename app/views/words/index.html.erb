@@ -1,7 +1,6 @@
 <p style="color: green"><%= notice %></p>
 <h1>Words</h1>
 <div id="words">
-  <%= render @words %>
-  <%= print_grid(@words, 5) %>
+  <%= print_grid(@words, 5, true) %>
 </div>
 <%= link_to "New word", new_word_path %>

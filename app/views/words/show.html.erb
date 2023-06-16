@@ -4,14 +4,20 @@
   <%= button_to "Destroy this word", @word, method: :delete %>
 </div>
 <div class="row">
-  <div id="<%= dom_id @word %>">
+  <div id="<%= dom_id @word %>" class="half">
     <h2>
       <%= @word.name %> <%= favorite_star(@word) %>
     </h2>
-    <%= image_link(@word) %>
+    <%= word_image_link(@word) %>
     <p>
       <strong>category:</strong>
       <%= @word.category.name %>
+      <%= @word.docs.count %>
     </p>
+    <%= generate_image_word_button(@word) %>
+    <%= generate_image_word_variation_button(@word) %>
+  </div>
+  <div class="half">
+    <%= print_image_grid(@word.docs, '100x100') %>
   </div>
 </div>

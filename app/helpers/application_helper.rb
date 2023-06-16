@@ -21,4 +21,22 @@ module ApplicationHelper
 
     content.html_safe
   end
+
+  def display_main_image(main_image, size = "500")
+    image_tag main_image, class: "word-display"
+  end
+
+  def display_placeholder_image(main_image, size = "500")
+    image_tag main_image, class: "word-display"
+  end
+
+  def display_sized_image(main_image, size = "100x100")
+    image_tag main_image, size: size, class: "sized-display"
+  end
+
+  def image_link(item)
+    if item.main_image
+      display_main_image(item.main_image)
+    end
+  end
 end

@@ -20,9 +20,18 @@ require "open-uri"
 
 class Doc < ApplicationRecord
   has_one_attached :main_image
+  CURRENT_IMAGE_DOC_TYPE = "Current-Image"
 
   def main_image_on_disk
     ActiveStorage::Blob.service.path_for(main_image.key)
+  end
+
+  def self.current
+    where(doc_type: CURRENT_IMAGE_DOC_TYPE).last
+  end
+
+  def current?
+    doc_type === CURRENT_IMAGE_DOC_TYPE
   end
 
   def grab_image(url)

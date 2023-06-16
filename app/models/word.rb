@@ -22,17 +22,31 @@
 require "espeak"
 
 class Word < ApplicationRecord
+  include ImageHelper
+  include SpeechHelper
+  default_scope { includes(:docs) }
   has_many :docs, as: :documentable
   has_many :word_groups
   has_many :groups, through: :word_groups
   belongs_to :category
+  has_many :word_templates
+  has_many :templates, through: :word_templates
   after_save :create_image, if: :should_create_image
+  after_save :stop_request_on_save!, if: :send_request_on_save
   accepts_nested_attributes_for :docs, allow_destroy: true
 
   scope :with_long_name, -> { where("LENGTH(name) > 2") }
   scope :favorites, -> { where(favorite: true) }
 
-  CREATE_IMAGES = false
+  CREATE_IMAGES = true
+
+  def self.not_in_group(group_id)
+    self.includes(:word_groups).where(word_groups: { group_id: group_id })
+  end
+
+  def to_s
+    name
+  end
 
   def no_saved_images
     docs === Doc.none && CREATE_IMAGES
@@ -42,50 +56,17 @@ class Word < ApplicationRecord
     no_saved_images || send_request_on_save
   end
 
-  def default_options
-    { lang: "en-us",
-      pitch: 50,
-      speed: 170,
-      capital: 1,
-      amplitude: 100,
-      quiet: true }
+  def stop_request_on_save!
+    self.send_request_on_save = false
+    self.save!
+  end
+
+  def image_name_to_send
+    !picture_description.blank? ? picture_description : name
   end
 
   def open_ai_opts
-    prompt_for_image = picture_description || name
-    puts "prompt_for_image: #{prompt_for_image}"
-    { prompt: prompt_for_image }
-  end
-
-  def main_image
-    docs.last&.main_image
-  end
-
-  def speak
-    # Speaks "YO!"
-    lang = default_options[:lang]
-    pitch = default_options[:pitch]
-    speed = default_options[:speed]
-    capital = default_options[:capital]
-    amplitude = default_options[:amplitude]
-    quiet = default_options[:quiet]
-    # speech = ESpeak::Speech.new(name, voice: lang)
-    speech = ESpeak::Speech.new(name, voice: lang, pitch: pitch, speed: speed, capital: capital, amplitude: amplitude, quiet: quiet)
-    speech.speak # invokes espeak
-  end
-
-  def create_image_doc(url, img_name)
-    new_doc = docs.create(name: img_name, raw_body: url).grab_image(url)
-  end
-
-  def create_image
-    img_url = OpenAiClient.new(open_ai_opts).create_image
-    if img_url
-      create_image_doc(img_url, name)
-      puts "Successfully created & saved image. "
-    else
-      puts "**** ERROR **** \nDid not receive valid response.\n"
-    end
+    { prompt: image_name_to_send }
   end
 
   def self.request_images(ids)

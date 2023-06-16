@@ -18,23 +18,31 @@ class OpenAiClient
   end
 
   def create_image
-    puts "prompt = #{@prompt}"
-
-    response = openai_client.images.generate(parameters: { prompt: @prompt, size: "512x512" })
+    puts "@prompt: #{@prompt}"
+    begin
+      response = openai_client.images.generate(parameters: { prompt: @prompt, size: "512x512" })
+    rescue => e
+      puts "FOUND THIS ERROR ==> #{e}"
+    end
     puts "response: #{response}"
     if response
       img_url = response.dig("data", 0, "url")
     else
-      puts "**** ERROR **** \nDid not receive valid response.\n#{response}"
+      puts "**** Client ERROR **** \nDid not receive valid response.\n#{response}"
     end
     img_url
+  end
+
+  def create_image_variation(img_url, num_of_images = 1)
+    response = openai_client.images.variations(parameters: { image: img_url, n: num_of_images })
+    img_variation_url = response.dig("data", 0, "url")
+    img_variation_url
   end
 
   def create_completion
     response = openai_client.completions(parameters: { model: DEFAULT_MODEL, prompt: @prompt })
     if response
       choices = response["choices"].map { |c| "<p class='ai-response'>#{c["text"]}</p>" }.join("\n")
-      puts "CHOICES: #{choices}"
       response_body = choices[0]
     else
       puts "**** ERROR **** \nDid not receive valid response.\n"
@@ -48,13 +56,10 @@ class OpenAiClient
       messages: @messages, # Required.
       temperature: 0.7,
     }
-    puts "opts: #{opts.inspect}"
     response = openai_client.chat(
       parameters: opts,
     )
-    puts "Totals response: #{response.inspect}\n\n"
     puts response.dig("choices", 0, "message", "content")
-    # => "Hello! How may I assist you today?"
     if response
       @role = response.dig("choices", 0, "message", "role")
       @content = response.dig("choices", 0, "message", "content")

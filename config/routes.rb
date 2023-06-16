@@ -1,13 +1,24 @@
 Rails.application.routes.draw do
+  resources :galleries do
+    post "generate_image", on: :member
+    post "generate_image_variation", on: :member
+  end
+  resources :templates
   devise_for :users
-  resources :word_groups
   get "home/index"
-  resources :groups
+  resources :groups do
+    resources :word_groups
+  end
+  resources :docs do
+    post "mark_current", on: :member
+  end
   post "groups/:id/select_word/:word_id", to: "groups#select_word", as: :select_group_word
   post "groups/:id/select_words", to: "groups#select_words", as: :select_group_words
 
   resources :words do
     post "speak", on: :member
+    post "generate_image", on: :member
+    post "generate_image_variation", on: :member
   end
   resources :categories
   resources :posts

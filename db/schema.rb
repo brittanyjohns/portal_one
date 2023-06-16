@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_06_01_175353) do
+ActiveRecord::Schema[7.1].define(version: 2023_06_16_174351) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -67,6 +67,17 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_01_175353) do
     t.index ["documentable_type", "documentable_id"], name: "index_doc_on_documentable"
   end
 
+  create_table "galleries", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "name"
+    t.string "state"
+    t.string "image_prompt"
+    t.boolean "send_request_on_save"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_galleries_on_user_id"
+  end
+
   create_table "groups", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -92,6 +103,15 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_01_175353) do
     t.integer "response_type", default: 0
   end
 
+  create_table "templates", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "name"
+    t.string "template_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_templates_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -115,6 +135,15 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_01_175353) do
     t.index ["word_id"], name: "index_word_groups_on_word_id"
   end
 
+  create_table "word_templates", force: :cascade do |t|
+    t.integer "word_id", null: false
+    t.integer "template_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["template_id"], name: "index_word_templates_on_template_id"
+    t.index ["word_id"], name: "index_word_templates_on_word_id"
+  end
+
   create_table "words", force: :cascade do |t|
     t.string "name"
     t.integer "category_id", null: false
@@ -128,8 +157,12 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_01_175353) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "galleries", "users"
   add_foreign_key "messages", "posts"
+  add_foreign_key "templates", "users"
   add_foreign_key "word_groups", "groups"
   add_foreign_key "word_groups", "words"
+  add_foreign_key "word_templates", "templates"
+  add_foreign_key "word_templates", "words"
   add_foreign_key "words", "categories"
 end

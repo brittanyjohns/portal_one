@@ -3,6 +3,7 @@ class WordGroupsController < ApplicationController
 
   # GET /word_groups or /word_groups.json
   def index
+    @groups = Group.all
     @word_groups = WordGroup.all
   end
 
