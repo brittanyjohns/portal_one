@@ -1,24 +1,22 @@
-<p style="color: green"><%= notice %></p>
-<%= render @gallery %>
-<%= image_link(@gallery)%>
-<div>
-  <%= link_to "Edit this gallery", edit_gallery_path(@gallery) %> |
-  <%= link_to "Back to galleries", galleries_path %>
-  <%= button_to "Destroy this gallery", @gallery, method: :delete %>
-</div>
+<hr>
+<h2 class="text-center">
+  <%= @gallery.name %>
+</h2>
 <div class="row">
-  <div id="<%= dom_id @gallery %>" class="half">
-    <h2>
-      <%= @gallery.name %>
-    </h2>
-    <%= image_link(@gallery) %>
-    <p>
-      <%= @gallery.docs.count %>
-    </p>
-    <%= generate_image_gallery_button(@gallery) %>
-    <%= generate_image_gallery_variation_button(@gallery) %>
+  <div class="gallery-image-form-group">
+    <%= form_with model: @gallery, url: generate_image_gallery_path(@gallery), method: :post do |form| %>
+      <%= form.label "Prompt for image:"  %>
+      <%= form.text_field :image_prompt, class: "form-control inline" %>
+      <%= form.submit "Create", class: 'btn btn-outline-light' %>
+    <% end %>
   </div>
-  <div class="half">
-    <%= print_image_grid(@gallery.docs, '100x100') %>
+</div>
+<div class="container">
+  <%= generate_image_gallery_variation_button(@gallery) %>
+  <div class="row">
+    <div class="half">
+      <%= image_link(@gallery, "img-fluid main-gallery-image") %>
+    </div>
+    <%= print_image_grid(@docs.order(created_at: :asc), '100x100') %>
   </div>
 </div>

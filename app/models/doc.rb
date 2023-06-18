@@ -4,9 +4,11 @@
 #
 #  id                :integer          not null, primary key
 #  body              :text
+#  current           :boolean
 #  doc_type          :string
 #  documentable_type :string           not null
 #  name              :string
+#  prompt_used       :string
 #  raw_body          :text
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
@@ -20,18 +22,22 @@ require "open-uri"
 
 class Doc < ApplicationRecord
   has_one_attached :main_image
-  CURRENT_IMAGE_DOC_TYPE = "Current-Image"
 
   def main_image_on_disk
     ActiveStorage::Blob.service.path_for(main_image.key)
   end
 
   def self.current
-    where(doc_type: CURRENT_IMAGE_DOC_TYPE).last
+    where(current: true).last
   end
 
-  def current?
-    doc_type === CURRENT_IMAGE_DOC_TYPE
+  def mark_current!
+    related_docs.update_all(current: false)
+    self.update!(current: true)
+  end
+
+  def related_docs
+    Doc.where(documentable_id: documentable_id, documentable_type: documentable_type)
   end
 
   def grab_image(url)

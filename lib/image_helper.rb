@@ -12,7 +12,7 @@ module ImageHelper
   end
 
   def create_image_doc(url, img_name)
-    new_doc = docs.create(name: img_name, raw_body: url).grab_image(url)
+    new_doc = docs.create(name: img_name, raw_body: url, current: true).grab_image(url)
   end
 
   def create_image

@@ -18,15 +18,10 @@ class OpenAiClient
   end
 
   def create_image
-    puts "@prompt: #{@prompt}"
-    begin
-      response = openai_client.images.generate(parameters: { prompt: @prompt, size: "512x512" })
-    rescue => e
-      puts "FOUND THIS ERROR ==> #{e}"
-    end
-    puts "response: #{response}"
+    response = openai_client.images.generate(parameters: { prompt: @prompt, size: "512x512" })
     if response
       img_url = response.dig("data", 0, "url")
+      puts "*** ERROR *** Invaild Image Response: #{response}" unless img_url
     else
       puts "**** Client ERROR **** \nDid not receive valid response.\n#{response}"
     end
@@ -35,7 +30,8 @@ class OpenAiClient
 
   def create_image_variation(img_url, num_of_images = 1)
     response = openai_client.images.variations(parameters: { image: img_url, n: num_of_images })
-    img_variation_url = response.dig("data", 0, "url")
+    img_variation_url = response&.dig("data", 0, "url")
+    puts "*** ERROR *** Invaild Image Variation Response: #{response}" unless img_variation_url
     img_variation_url
   end
 
@@ -73,8 +69,3 @@ class OpenAiClient
     @models = openai_client.models.list
   end
 end
-
-# opts = { prompt: "a purple cow" }
-# client = OpenAiClient.new(opts)
-# img_url = client.create_image
-# puts "img_url: #{img_url}"

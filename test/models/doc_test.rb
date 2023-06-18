@@ -4,9 +4,11 @@
 #
 #  id                :integer          not null, primary key
 #  body              :text
+#  current           :boolean
 #  doc_type          :string
 #  documentable_type :string           not null
 #  name              :string
+#  prompt_used       :string
 #  raw_body          :text
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null

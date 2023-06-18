@@ -8,10 +8,15 @@ class GalleriesController < ApplicationController
 
   # GET /galleries/1 or /galleries/1.json
   def show
+    @gallery.image_prompt = @gallery.main_doc.name
+    @docs = @gallery.docs.where.not(id: @gallery.main_doc).order(created_at: :desc)
+    puts "****\n****\ndocs: #{@docs.first.id}\n***"
   end
 
   def generate_image
+    puts "params: #{params}\ngallery_params['image_prompt']:#{gallery_params["image_prompt"]}"
     puts "About to resubmit"
+    @gallery.image_prompt = gallery_params["image_prompt"]
     resubmit(@gallery)
   end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_06_16_174351) do
+ActiveRecord::Schema[7.1].define(version: 2023_06_17_165107) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -64,6 +64,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_06_16_174351) do
     t.integer "documentable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "prompt_used"
+    t.boolean "current"
     t.index ["documentable_type", "documentable_id"], name: "index_doc_on_documentable"
   end
 

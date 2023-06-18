@@ -1,6 +1,6 @@
-<nav class="navbar navbar-expand-lg bg-light">
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <%= link_to  "Portal One", root_path, class: "navbar-brand" %>
+    <%= link_to  "PortalOne", root_path, class: "navbar-brand" %>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -9,16 +9,23 @@
         <li class="nav-item"><%= link_to "Home", root_path, class: "nav-link" %></li>
         <li class="nav-item"><%= link_to "Galleries", galleries_path, class: "nav-link" %></li>
         <li class="nav-item"><%= link_to "Posts", posts_path, class: "nav-link" %></li>
-        <li class="nav-item"><%= link_to "New Request", new_post_path, class: "nav-link" %></li>
-        <li class="nav-item"><%= link_to "New Word", new_word_path, class: "nav-link" %></li>
-        <li class="nav-item"><%= link_to "New Category", new_category_path, class: "nav-link" %></li>
-        <li class="nav-item"><%= link_to "New Group", new_group_path, class: "nav-link" %></li>
-        <li class="nav-item"><%= link_to "All Groups", groups_path, class: "nav-link" %></li>
-        <li class="nav-item"><%= link_to "All Categories", categories_path, class: "nav-link" %></li>
-        <li class="nav-item"><%= link_to "All Words", words_path, class: "nav-link" %></li>
-        <li class="nav-item"><%= link_to "All Templates", templates_path, class: "nav-link" %></li>
+        <li class="nav-item dropdown">
+          <a id="create-nav-dropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            create
+          </a>
+          <ul class="dropdown-menu">
+            <%= link_to "New Gallery", new_gallery_path, class: "dropdown-item" %>
+            <%= link_to "New Post", new_post_path, class: "dropdown-item" %>
+            <%= link_to "New Group", new_group_path, class: "dropdown-item" %>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li>
       </ul>
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
     </div>
   </div>
-</div>
 </nav>

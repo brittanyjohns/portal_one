@@ -1,7 +1,6 @@
 class DocsController < ApplicationController
   before_action :set_doc, only: %i[ show edit update destroy mark_current ]
   include ActiveStorage::SetCurrent
-  CURRENT_IMAGE_DOC_TYPE = "Current-Image"
 
   # GET /docs or /docs.json
   def index
@@ -22,16 +21,18 @@ class DocsController < ApplicationController
   end
 
   def mark_current
-    @word = Word.find(@doc.documentable_id)
-    @word.docs.update_all(doc_type: "")
+    @word = Word.find(@doc.documentable_id) if @doc.documentable_type == "Word"
+    @gallery = Gallery.find(@doc.documentable_id) if @doc.documentable_type == "Gallery"
+    @item = @word || @gallery
+    @item.docs.update_all(current: false)
 
     respond_to do |format|
-      if @doc.update(doc_type: CURRENT_IMAGE_DOC_TYPE)
-        format.html { redirect_to @word }
-        format.json { render :show, status: :created, location: @word }
+      if @doc.mark_current!
+        format.html { redirect_to @item }
+        format.json { render :show, status: :created, location: @item }
       else
-        format.html { render @word, status: :unprocessable_entity }
-        format.json { render json: @word.errors, status: :unprocessable_entity }
+        format.html { render @item, status: :unprocessable_entity }
+        format.json { render json: @item.errors, status: :unprocessable_entity }
       end
     end
   end
