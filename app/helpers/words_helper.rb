@@ -13,10 +13,6 @@ module WordsHelper
     button_to icon("fa-regular", "comment-dots"), speak_word_path(word), class: "btn", method: :post
   end
 
-  def mark_current_button(doc)
-    button_to icon("fa-#{doc.current? ? "solid" : "regular"}", "star"), mark_current_doc_path(doc), class: "btn current-btn", method: :post
-  end
-
   def generate_image_word_button(word)
     button_to "#{icon("fa-regular", "image")} CREATE".html_safe, generate_image_word_path(word), class: "btn btn-info", method: :post
   end

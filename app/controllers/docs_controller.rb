@@ -1,5 +1,5 @@
 class DocsController < ApplicationController
-  before_action :set_doc, only: %i[ show edit update destroy mark_current ]
+  before_action :set_doc, only: %i[ show edit update destroy mark_current create_variation ]
   include ActiveStorage::SetCurrent
 
   # GET /docs or /docs.json
@@ -20,12 +20,22 @@ class DocsController < ApplicationController
   def edit
   end
 
-  def mark_current
-    @word = Word.find(@doc.documentable_id) if @doc.documentable_type == "Word"
-    @gallery = Gallery.find(@doc.documentable_id) if @doc.documentable_type == "Gallery"
-    @item = @word || @gallery
-    @item.docs.update_all(current: false)
+  def create_variation
+    @item = @doc.documentable
+    respond_to do |format|
+      if @item.create_image_variation(@doc.main_image_on_disk)
+        format.html { redirect_to @item }
+        format.json { render :show, status: :created, location: @item }
+      else
+        format.html { render @item, status: :unprocessable_entity }
+        format.json { render json: @item.errors, status: :unprocessable_entity }
+      end
+    end
+  end
 
+  def mark_current
+    return if @doc.current?
+    @item = @doc.documentable
     respond_to do |format|
       if @doc.mark_current!
         format.html { redirect_to @item }

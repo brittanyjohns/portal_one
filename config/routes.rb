@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   end
   resources :docs do
     post "mark_current", on: :member
+    post "create_variation", on: :member
   end
   post "groups/:id/select_word/:word_id", to: "groups#select_word", as: :select_group_word
   post "groups/:id/select_words", to: "groups#select_words", as: :select_group_words
@@ -22,6 +23,7 @@ Rails.application.routes.draw do
   end
   resources :categories
   resources :posts
+  resources :docs
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

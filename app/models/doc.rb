@@ -31,12 +31,22 @@ class Doc < ApplicationRecord
     where(current: true).last
   end
 
+  def self.all_current
+    where(current: true)
+  end
+
   def mark_current!
-    related_docs.update_all(current: false)
+    related_images.update_all(current: false)
+    puts "related_images: #{related_images.inspect}"
     self.update!(current: true)
   end
 
-  def related_docs
+  def documentable
+    documentable_type.constantize.find(documentable_id)
+  end
+
+  def related_images
+    documentable.docs.update_all(current: false, doc_type: "Image")
     Doc.where(documentable_id: documentable_id, documentable_type: documentable_type)
   end
 

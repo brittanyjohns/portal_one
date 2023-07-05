@@ -2,21 +2,7 @@
 <h2 class="text-center">
   <%= @gallery.name %>
 </h2>
-<div class="row">
-  <div class="gallery-image-form-group">
-    <%= form_with model: @gallery, url: generate_image_gallery_path(@gallery), method: :post do |form| %>
-      <%= form.label "Prompt for image:"  %>
-      <%= form.text_field :image_prompt, class: "form-control inline" %>
-      <%= form.submit "Create", class: 'btn btn-outline-light' %>
-    <% end %>
-  </div>
-</div>
-<div class="container">
-  <%= generate_image_gallery_variation_button(@gallery) %>
-  <div class="row">
-    <div class="half">
-      <%= image_link(@gallery, "img-fluid main-gallery-image") %>
-    </div>
-    <%= print_image_grid(@docs.order(created_at: :asc), '100x100') %>
-  </div>
+<%= render 'prompts/form' %>
+<div class="">
+  <%= print_image_grid(@gallery.docs.order(current: :desc, updated_at: :desc), 5) %>
 </div>

@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   def resubmit(item_to_save)
     puts "\n\n\nResubmitting --- \n\n\n"
     item_path = public_send("#{item_to_save.class.to_s.downcase}_url", item_to_save)
+    puts "ITEM PATH: #{item_path}"
     if item_to_save.respond_to? :send_request_on_save
       item_to_save.send_request_on_save = true
     end

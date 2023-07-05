@@ -30,7 +30,7 @@ class OpenAiClient
 
   def create_image_variation(img_url, num_of_images = 1)
     response = openai_client.images.variations(parameters: { image: img_url, n: num_of_images })
-    img_variation_url = response&.dig("data", 0, "url")
+    img_variation_url = response.dig("data", 0, "url")
     puts "*** ERROR *** Invaild Image Variation Response: #{response}" unless img_variation_url
     img_variation_url
   end

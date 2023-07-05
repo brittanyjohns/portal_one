@@ -1,13 +1,14 @@
 module ApplicationHelper
-  def print_image_grid(docs, img_size = nil, columns = 3)
-    str = "<div class='half'>"
+  def print_image_grid(docs, columns = 3)
+    str = "<div class=''>"
 
     docs.each_slice(columns) do |batch|
       str += "<div class='row'>"
       batch.each do |doc|
         str += "<div id='doc_#{doc.id}' class='col-img'>"
+        str += generate_variation_button(doc)
         str += mark_current_button(doc)
-        str += display_main_image(doc.main_image, "word-display") if doc.main_image
+        str += image_link(doc, "word-display") if doc.main_image
         str += "</div>"
       end
       str += "</div>"
@@ -62,7 +63,23 @@ module ApplicationHelper
 
   def image_link(item, class_to_add = nil)
     if item.main_image
-      display_main_image(item.main_image, class_to_add)
+      if @gallery
+        link_to item do
+          display_main_image(item.main_image, class_to_add)
+        end
+      else
+        link_to item.documentable do
+          display_main_image(item.main_image, class_to_add)
+        end
+      end
     end
+  end
+
+  def mark_current_button(doc)
+    button_to icon("fa-#{doc.current? ? "solid" : "regular"}", "star"), mark_current_doc_path(doc), class: "btn current-btn", method: :post
+  end
+
+  def generate_variation_button(doc)
+    button_to icon("fa-solid", "recycle"), create_variation_doc_path(doc), class: "btn doc-var-btn", method: :post
   end
 end
