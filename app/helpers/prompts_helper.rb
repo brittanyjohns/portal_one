@@ -1,9 +1,9 @@
 module PromptsHelper
-  def form_links(form, image_types, input_id = nil)
+  def form_links(form, link_names, input_id = nil)
     link_list = []
-    image_types.each do |image_type|
-      input_id ||= image_type.downcase
-      link_list << form.submit(image_type, id: input_id, class: "btn btn-dark")
+    link_names.each do |link_name|
+      input_id ||= link_name.downcase
+      link_list << form.submit(link_name, id: input_id, class: "btn btn-dark")
     end
     link_list.join("").html_safe
   end

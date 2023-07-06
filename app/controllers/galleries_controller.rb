@@ -1,5 +1,5 @@
 class GalleriesController < ApplicationController
-  before_action :set_gallery, :set_image_type, :set_image_type_text, only: %i[ show edit update destroy generate_image generate_image_variation ]
+  before_action :set_gallery, :set_image_type, :set_image_type_text, only: %i[ show edit update destroy generate_image generate_image_variation generate_random_prompt ]
 
   # GET /galleries or /galleries.json
   def index
@@ -8,9 +8,15 @@ class GalleriesController < ApplicationController
 
   # GET /galleries/1 or /galleries/1.json
   def show
-    @gallery.image_prompt = @gallery.main_doc&.name
+    @gallery.image_prompt = @gallery.main_doc&.name || @gallery.random_prompt
     @docs = @gallery.docs.where.not(id: @gallery.main_doc).order(created_at: :desc)
     puts "****\n****\ndocs: #{@docs.first&.id}\n***"
+  end
+
+  def generate_random_prompt
+    @gallery.image_prompt = @gallery.random_prompt
+    puts "Rendering show"
+    render :show
   end
 
   def generate_image
@@ -72,7 +78,7 @@ class GalleriesController < ApplicationController
 
   # GET /galleries/new
   def new
-    @gallery = Gallery.new
+    @gallery = Gallery.new.random_prompt
     @gallery.user = User.first unless current_user
   end
 
@@ -82,7 +88,7 @@ class GalleriesController < ApplicationController
 
   # POST /galleries or /galleries.json
   def create
-    @gallery = Gallery.new(gallery_params)
+    @gallery = Gallery.new(name: gallery_params["name"])
     @gallery.user = User.first unless current_user
 
     respond_to do |format|

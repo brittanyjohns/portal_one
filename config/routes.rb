@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   resources :galleries do
     post "generate_image", on: :member
     post "generate_image_variation", on: :member
+    get "generate_random_prompt", on: :member
   end
   resources :templates
   devise_for :users

@@ -1,12 +1,10 @@
 <%= simple_form_for(@gallery) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
-  <%= f.object.inspect %>
   <div class="form-inputs">
     <%= f.input :name %>
   </div>
-  USER: <%= @gallery.user_id %>
   <div class="form-actions">
-    <%= f.button :submit %>
+    <%= f.submit "Create", class: 'btn btn-outline-light' %>
   </div>
 <% end %>

@@ -100,7 +100,7 @@ class Post < ApplicationRecord
       self.content.body = response_body
       self.send_request_on_save = false
       self.save!
-      rich_text_content = ActionText::RichText.find_or_initialize_by(record_type: "Post", record_id: post.id, name: "content", body: response_body)
+      rich_text_content = ActionText::RichText.find_or_initialize_by(record_type: "Post", record_id: id, name: "content", body: response_body)
       rich_text_content.save!
     else
       puts "**** ERROR **** \nDid not receive valid response.\n"

@@ -1,10 +1,11 @@
 <div class="gallery-image-form-group">
-  <%= form_with model: @gallery, url: generate_image_gallery_path(@gallery), method: :post do |form| %>
+  <%= simple_form_for(@gallery, as: :gallery, method: :post, url: generate_image_gallery_path(@gallery)) do |form| %>
     <div class="btn-group-vertical float-start img-type-btn-group" role="group" aria-label="Vertical button group">
       <%= form_links form, @gallery.image_types %>
     </div>
     <%= form.label "Prompt for image:"  %>
-    <%= form.text_field :image_prompt, class: "form-control inline" %>
+    <%= form.text_area :image_prompt, class: "form-control float-right" %>
     <%= form.submit "Create", class: 'btn btn-outline-light' %>
+    <%= link_to icon("fa-solid", "recycle"), generate_random_prompt_gallery_path(@gallery) %>
   <% end %>
 </div>

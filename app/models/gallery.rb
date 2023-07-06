@@ -29,6 +29,10 @@ class Gallery < ApplicationRecord
     { prompt: image_prompt }
   end
 
+  def random_prompt
+    random_prompts.sample
+  end
+
   def stop_request_on_save!
     self.send_request_on_save = false
     self.save!
