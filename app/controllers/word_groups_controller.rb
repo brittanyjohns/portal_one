@@ -3,8 +3,8 @@ class WordGroupsController < ApplicationController
 
   # GET /word_groups or /word_groups.json
   def index
-    @groups = Group.all
-    @word_groups = WordGroup.all
+    @group = Group.find(params[:group_id])
+    @word_groups = @group.word_groups.all
   end
 
   # GET /word_groups/1 or /word_groups/1.json
@@ -13,8 +13,11 @@ class WordGroupsController < ApplicationController
 
   # GET /word_groups/new
   def new
+    @group = Group.find(params[:group_id])
+
     @words = Word.take(10)
-    @word_group = WordGroup.new
+    @word_group = @group.word_groups.new
+    @word = Word.new
   end
 
   # GET /word_groups/1/edit
@@ -63,6 +66,7 @@ class WordGroupsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_word_group
+    @group = Group.find(params[:group_id])
     @word_group = WordGroup.find(params[:id])
   end
 

@@ -1,4 +1,10 @@
 class ApplicationController < ActionController::Base
+  before_action :authenticate_user!, :set_current_user
+
+  def set_current_user
+    @current_user = current_user
+  end
+
   def resubmit(item_to_save)
     puts "\n\n\nResubmitting --- \n\n\n"
     item_path = public_send("#{item_to_save.class.to_s.downcase}_url", item_to_save)

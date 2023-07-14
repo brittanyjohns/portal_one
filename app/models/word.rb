@@ -35,10 +35,12 @@ class Word < ApplicationRecord
   after_save :stop_request_on_save!, if: :send_request_on_save
   accepts_nested_attributes_for :docs, allow_destroy: true
 
+  validates :name, presence: true
+
   scope :with_long_name, -> { where("LENGTH(name) > 2") }
   scope :favorites, -> { where(favorite: true) }
 
-  CREATE_IMAGES = true
+  CREATE_IMAGES = false
 
   def self.not_in_group(group_id)
     self.includes(:word_groups).where(word_groups: { group_id: group_id })

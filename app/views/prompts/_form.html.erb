@@ -1,11 +1,22 @@
-<div class="gallery-image-form-group">
+<div class="gallery-image-form-group clearfix">
   <%= simple_form_for(@gallery, as: :gallery, method: :post, url: generate_image_gallery_path(@gallery)) do |form| %>
-    <div class="btn-group-vertical float-start img-type-btn-group" role="group" aria-label="Vertical button group">
+    <%# <div class="btn-group-vertical float-start img-type-btn-group" role="group" aria-label="Vertical button group">
       <%= form_links form, @gallery.image_types %>
+    <%# </div> %>
+    <div class="row g-3">
+      <div class="col-md-9">
+        <div class="input-group">
+          <%= form.label "Prompt:"  %>
+          <%= form.text_area :image_prompt, class: "form-control float-right" %>
+          <%= link_to "#{icon("fa-solid", "recycle")} Random".html_safe, generate_random_prompt_gallery_path(@gallery), class: 'btn btn-outline-secondary' %>
+        </div>
+      </div>
+      <div class="col-md">
+        <%= form.input :image_type, collection: @gallery.image_types, prompt: "Select image type" %>
+      </div>
+      <div class='btn-group'>
+        <%= form.submit "Create", class: 'btn btn-outline-light btn-sm' %>
+      </div>
     </div>
-    <%= form.label "Prompt for image:"  %>
-    <%= form.text_area :image_prompt, class: "form-control float-right" %>
-    <%= form.submit "Create", class: 'btn btn-outline-light' %>
-    <%= link_to icon("fa-solid", "recycle"), generate_random_prompt_gallery_path(@gallery) %>
   <% end %>
 </div>

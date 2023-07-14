@@ -1,4 +1,7 @@
-<h1 class="text-center">Welcome!</h1>
+<h1 class="text-center">Welcome, <%=current_user.display_name %>!</h1>
+<ul class="devise-home-links">
+  <%= render 'devise/menu/registration_items' %>
+  <%= render 'devise/menu/login_items' %>
+</ul>
 <div class="image-grid">
-  <%= print_image_grid(Doc.order(created_at: :asc).last(25), 5) %>
 </div>

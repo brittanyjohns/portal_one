@@ -1,4 +1,8 @@
 <%= link_to "Edit this group", edit_group_path(@group) %> |
-<div class="container">
-  <%= print_grid(@group.words, 4) %>
+<%= render 'create_word', group: @group %>
+<hr>
+<div id="words">
+  <% @words.each do |word| %>
+    <%= word.inspect %>
+  <% end %>
 </div>

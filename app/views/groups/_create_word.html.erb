@@ -1,0 +1,5 @@
+<%= simple_form_for @word, url: "/groups/#{group.id}/create_word", method: :post do |f| %>
+  <%= f.association :category %>
+  <%= f.input :name %>
+  <%= f.button :submit %>
+<% end %>

@@ -24,6 +24,7 @@ class Gallery < ApplicationRecord
   belongs_to :user
   has_many :docs, as: :documentable
   after_save :create_image, :stop_request_on_save!, if: :send_request_on_save
+  attr_accessor :image_type
 
   def open_ai_opts
     { prompt: image_prompt }
@@ -55,7 +56,6 @@ class Gallery < ApplicationRecord
      "Photography",
      "Sculpture",
      "Printmaking",
-     "Mixed media",
      "Graphic design",
      "Ceramic pottery",
      "Glassblowing",

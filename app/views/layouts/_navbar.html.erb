@@ -1,31 +1,30 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <%= link_to  "PortalOne", root_path, class: "navbar-brand" %>
+    <%= link_to "PortalOne", root_path, class: "navbar-brand" %>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item"><%= link_to "Home", root_path, class: "nav-link" %></li>
-        <li class="nav-item"><%= link_to "Galleries", galleries_path, class: "nav-link" %></li>
-        <li class="nav-item"><%= link_to "Posts", posts_path, class: "nav-link" %></li>
-        <li class="nav-item dropdown">
-          <a id="create-nav-dropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            create
-          </a>
-          <ul class="dropdown-menu">
-            <%= link_to "New Gallery", new_gallery_path, class: "dropdown-item" %>
-            <%= link_to "New Post", new_post_path, class: "dropdown-item" %>
-            <%= link_to "New Group", new_group_path, class: "dropdown-item" %>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li>
+        <%= render 'devise/menu/registration_items' %>
+        <%= render 'devise/menu/login_items' %>
+        <% if user_signed_in? %>
+          <li class="nav-item"><%= link_to "Galleries", galleries_path, class: "nav-link" %></li>
+          <li class="nav-item"><%= link_to "Groups", groups_path, class: "nav-link" %></li>
+          <li class="nav-item"><%= link_to "Posts", posts_path, class: "nav-link" %></li>
+          <li class="nav-item dropdown">
+            <a id="create-nav-dropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              +
+            </a>
+            <ul class="dropdown-menu">
+              <%= link_to "New Gallery", new_gallery_path, class: "dropdown-item" %>
+              <%= link_to "New Post", new_post_path, class: "dropdown-item" %>
+              <%= link_to "New Group", new_group_path, class: "dropdown-item" %>
+              <%= link_to "New Word", new_word_path, class: "dropdown-item" %>
+            </ul>
+          </li>
+        <% end %>
       </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
     </div>
   </div>
 </nav>

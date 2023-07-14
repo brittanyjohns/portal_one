@@ -1,5 +1,8 @@
 module WordsHelper
   def word_image_link(word)
+    unless word.id
+      return ''
+    end
     if word.main_image
       link_to(speak_word_path(word), data: { turbo_method: :post }) do
         display_main_image(word.main_image, "word-display")

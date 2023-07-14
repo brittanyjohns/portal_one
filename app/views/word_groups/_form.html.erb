@@ -1,4 +1,6 @@
-<%= simple_form_for word_group do |f| %>
-  <%= f.association :word, as: :radio_buttons %>
-  <%= f.button :submit %>
+<% form_for @word_group, url: new_group_word_group_path(@group.id) do |f| %>
+  <% f.simple_fields_for :word do |word_form| %>%
+    # Here you have all simple_form methods available
+    <%= word_form.input :name %>
+  <% end %>
 <% end %>

@@ -50,7 +50,9 @@ class WordsController < ApplicationController
 
   # POST /words or /words.json
   def create
-    @word = Word.new(word_params)
+    puts "", "CREATE: "
+    pp word_params.inspect
+    @word = Word.find_or_create_by(word_params)
 
     respond_to do |format|
       if @word.save

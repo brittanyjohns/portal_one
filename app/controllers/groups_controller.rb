@@ -1,14 +1,37 @@
 class GroupsController < ApplicationController
-  before_action :set_group, only: %i[ show edit update destroy select_word select_words ]
+  before_action :set_group, only: %i[ show edit update destroy create_word select_words ]
 
   # GET /groups or /groups.json
   def index
-    @groups = Group.all
+    puts "@current_user:#{@current_user.class} #{@current_user.inspect}"
+    @groups = @current_user.groups.all
   end
 
   # GET /groups/1 or /groups/1.json
   def show
     @words = @group.words
+    @word = @group.words.new
+  end
+
+  def create_word
+    puts "", "CREATE: "
+    puts "PARAMS: #{params}"
+    word_params = params["word"]
+    puts "", "word_params:", word_params
+
+    @word = Word.find_or_create_by(category_id: word_params["category_id"], name: word_params["name"])
+    word_group = WordGroup.new(group_id: @group.id, word_id: @word.id)
+    # @group.word_ids << @word.id
+
+    respond_to do |format|
+      if word_group.save
+        format.html { redirect_to group_url(@group), notice: "Word was successfully created." }
+        format.json { render :show, status: :created, location: @group }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @group.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   def select_words
@@ -57,12 +80,13 @@ class GroupsController < ApplicationController
 
   # GET /groups/1/edit
   def edit
-    @words = Word.all
+    @words = Word.last(5)
   end
 
   # POST /groups or /groups.json
   def create
     @group = Group.new(group_params)
+    @group.user = @current_user
 
     respond_to do |format|
       if @group.save

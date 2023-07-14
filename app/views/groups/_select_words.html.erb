@@ -4,7 +4,6 @@
       <%= form.submit "SAVE", id: "save-btn", class: "btn btn-success btn-lg" %>
     </div>
     <div class="word-wrapper">
-      HELLO
       <% words.each do |word| -%>
         <div class="word-container">
           <%= check_box_tag :word_ids, word.id, group.words.include?(word), :name => 'group[word_ids][]' -%>

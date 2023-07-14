@@ -3,6 +3,6 @@
   <%= @gallery.name %>
 </h2>
 <%= render 'prompts/form' %>
-<div class="">
+<div class="row">
   <%= print_image_grid(@gallery.docs.order(current: :desc, updated_at: :desc), 5) %>
 </div>

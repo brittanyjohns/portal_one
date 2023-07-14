@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get "home/index"
+  get "home/profile"
+  patch "home/update_profile"
   resources :galleries do
     post "generate_image", on: :member
     post "generate_image_variation", on: :member
@@ -6,8 +9,8 @@ Rails.application.routes.draw do
   end
   resources :templates
   devise_for :users
-  get "home/index"
   resources :groups do
+    post "create_word", on: :member
     resources :word_groups
   end
   resources :docs do

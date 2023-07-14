@@ -9,7 +9,7 @@
 #  user_id    :integer
 #
 class Group < ApplicationRecord
-  # belongs_to :user
+  belongs_to :user
   default_scope { includes(:word_groups) }
 
   has_many :word_groups

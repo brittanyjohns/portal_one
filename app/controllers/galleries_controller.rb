@@ -3,7 +3,7 @@ class GalleriesController < ApplicationController
 
   # GET /galleries or /galleries.json
   def index
-    @galleries = Gallery.all
+    @galleries = @current_user.galleries.all
   end
 
   # GET /galleries/1 or /galleries/1.json
@@ -49,10 +49,7 @@ class GalleriesController < ApplicationController
 
   def set_image_type
     puts "params #{params.inspect}"
-    @image_type = params["commit"]
-    if params["commit"] == "Create"
-      @image_type = ""
-    end
+    @image_type = gallery_params["image_type"]
     scrub_current_prompt
   end
 
@@ -78,8 +75,8 @@ class GalleriesController < ApplicationController
 
   # GET /galleries/new
   def new
-    @gallery = Gallery.new.random_prompt
-    @gallery.user = User.first unless current_user
+    @gallery = Gallery.new
+    @gallery.user = @current_user || User.first
   end
 
   # GET /galleries/1/edit
@@ -89,7 +86,7 @@ class GalleriesController < ApplicationController
   # POST /galleries or /galleries.json
   def create
     @gallery = Gallery.new(name: gallery_params["name"])
-    @gallery.user = User.first unless current_user
+    @gallery.user = @current_user || User.first
 
     respond_to do |format|
       if @gallery.save

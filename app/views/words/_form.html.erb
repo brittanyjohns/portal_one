@@ -3,16 +3,16 @@
   <%= f.input :name %>
   <%= f.input :picture_description %>
   <%= f.input :send_request_on_save %>
-  <hr>
   <div data-controller="nested-form" data-nested-form-index-value='DOC_RECORD'>
     <template data-nested-form-target='template'>
       <%= f.fields_for :docs, word.docs.new, child_index: 'DOC_RECORD' do |doc| %>
-        <%= render 'doc_upload', form: doc %>
+        <%= render 'words/doc_upload', form: doc %>
       <% end %>
     </template>
     <div data-nested-form-target="add_item">
       <%= link_to "Add Doc", "#", data: { action: "nested-form#add_association" }, class: "btn btn-success" %>
     </div>
   </div>
+  <hr>
   <%= f.button :submit %>
 <% end %>
