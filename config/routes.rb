@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  devise_for :users
+
   get "home/index"
   get "home/profile"
   patch "home/update_profile"
@@ -8,7 +10,6 @@ Rails.application.routes.draw do
     get "generate_random_prompt", on: :member
   end
   resources :templates
-  devise_for :users
   resources :groups do
     post "create_word", on: :member
     resources :word_groups

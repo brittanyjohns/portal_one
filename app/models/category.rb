@@ -13,4 +13,8 @@ class Category < ApplicationRecord
   def print_words
     words.map(&:name)
   end
+
+  def self.uncategorized_id
+    7
+  end
 end

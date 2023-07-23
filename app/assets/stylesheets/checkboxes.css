@@ -27,13 +27,14 @@ body {
   position: relative;
   cursor: pointer;
 }
-input[type="checkbox"] {
+.word-container input[type="checkbox"] {
   -webkit-appearance: none;
   position: relative;
   width: 100%;
   cursor: pointer;
 }
-input[type="checkbox"]:after {
+
+.word-container input[type="checkbox"]:after {
   position: absolute;
   font-family: "Font Awesome 5 Free";
   font-weight: 400;
@@ -43,7 +44,7 @@ input[type="checkbox"]:after {
   right: 10px;
   top: -5px;
 }
-input[type="checkbox"]:checked:after {
+.word-container input[type="checkbox"]:checked:after {
   font-weight: 900;
   content: "\f058";
   color: #478bfb;

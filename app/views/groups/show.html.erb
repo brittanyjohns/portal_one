@@ -1,8 +1,11 @@
-<%= link_to "Edit this group", edit_group_path(@group) %> |
-<%= render 'create_word', group: @group %>
-<hr>
-<div id="words">
-  <% @words.each do |word| %>
-    <%= word.inspect %>
-  <% end %>
+<%= link_to "Edit this group", edit_group_path(@group) %>
+<div class='row'>
+  <div class='col'>
+    <%= render 'create_word', group: @group %>
+  </div>
+  <div class='col' id="words">
+    <% @words.each do |word| %>
+      <p><%= word.name %></p>
+    <% end %>
+  </div>
 </div>

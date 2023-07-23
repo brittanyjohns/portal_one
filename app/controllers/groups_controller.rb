@@ -19,7 +19,10 @@ class GroupsController < ApplicationController
     word_params = params["word"]
     puts "", "word_params:", word_params
 
-    @word = Word.find_or_create_by(category_id: word_params["category_id"], name: word_params["name"])
+    @word = Word.find(name: word_params["name"])
+    unless @word
+      @word = Word.find_or_create_by(name: word_params["name"], category_id: Category.uncategorized_id)
+    end
     word_group = WordGroup.new(group_id: @group.id, word_id: @word.id)
     # @group.word_ids << @word.id
 

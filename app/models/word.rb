@@ -28,7 +28,7 @@ class Word < ApplicationRecord
   has_many :docs, as: :documentable
   has_many :word_groups
   has_many :groups, through: :word_groups
-  belongs_to :category
+  belongs_to :category, optional: true
   has_many :word_templates
   has_many :templates, through: :word_templates
   after_save :create_image, if: :should_create_image

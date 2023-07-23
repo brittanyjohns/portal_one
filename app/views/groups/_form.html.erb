@@ -1,13 +1,4 @@
 <%= simple_form_for @group do |f| %>
   <%= f.input :name %>
-  <h3>Words</h3>
-  <div id='words'>
-    <%= f.simple_fields_for :word_groups do |word_group| %>
-      <%= render 'word_group_fields', f: word_group %>
-      <div class='links'>
-        <%= link_to_add_association 'add a word', f, :word_groups %>
-      </div>
-    <% end %>
-  </div>
   <%= f.submit 'Save' %>
 <% end %>

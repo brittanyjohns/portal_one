@@ -37,7 +37,6 @@ class Doc < ApplicationRecord
 
   def mark_current!
     related_images.update_all(current: false)
-    puts "related_images: #{related_images.inspect}"
     self.update!(current: true)
   end
 
@@ -57,8 +56,7 @@ class Doc < ApplicationRecord
                                   "From" => "foo@bar.invalid",
                                   "Referer" => "http://www.ruby-lang.org/")
       puts "downloaded image: #{downloaded_image.inspect}"
-      sleep 2
-      self.main_image.attach(io: downloaded_image, filename: "#{name}_#{id}.png")
+      self.main_image.attach(io: downloaded_image, filename: "img_#{id}.png")
     rescue => e
       puts "ERROR: #{e.inspect}"
       raise e
